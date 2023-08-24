@@ -1,10 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import "./Histogram.css"; // Importing the CSS file
+import fetchGames from "../axios"; // Import the fetchGames function
 
-const Histogram = ({ data }) => {
+const Histogram = () => {
   const ref = useRef();
   const [selectedYear, setSelectedYear] = useState(1980);
+  const [data, setData] = useState([]); // State to hold the data
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [error, setError] = useState(null); // State to handle errors
+
+  useEffect(() => {
+    // Fetch data from the IGDB API
+    fetchGames()
+      .then((games) => {
+        setData(games); // Update the data state
+        setLoading(false); // Set loading to false
+      })
+      .catch((err) => {
+        setError(err.message); // Handle any errors
+        setLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     // Filter data for the selected year and the four subsequent years
@@ -94,6 +111,9 @@ const Histogram = ({ data }) => {
 
     // ... rest of the code remains the same
   }, [data, selectedYear]);
+
+  if (loading) return <div>Loading...</div>; // Loading state
+  if (error) return <div>Error: {error}</div>; // Error state
 
   return (
     <div className="histogram-container">

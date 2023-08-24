@@ -1,6 +1,6 @@
 const express = require("express");
 const axios = require("axios");
-require("dotenv").CONFIG;
+require("dotenv").config;
 
 const app = express();
 const port = 3001; // Choose an appropriate port
@@ -21,7 +21,9 @@ app.get("/games", async (req, res) => {
         },
       }
     );
+    console.log(res.json);
     res.json(igdbResponse.data);
+    console.log(res.json);
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while fetching games.");
