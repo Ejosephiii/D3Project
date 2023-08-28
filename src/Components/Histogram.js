@@ -92,6 +92,8 @@ const Histogram = ({ data }) => {
       .attr("class", "bar") // Add class "bar" to the bars
       .attr("x", (d) => xScale(d.year))
       .attr("y", (d) => yScale(d.rating))
+      .attr("rx", 5) // Rounded corners
+      .attr("ry", 5) // Rounded corners
       .attr("width", xScale.bandwidth())
       .attr("height", (d) => yScale(0) - yScale(d.rating))
       .attr("fill", "steelblue");
