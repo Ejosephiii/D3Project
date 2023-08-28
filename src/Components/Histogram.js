@@ -1,15 +1,61 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import "./Histogram.css"; // Importing the CSS file
+import axios from "axios";
+
+const igdbAPI = axios.create({
+  baseURL: "https://api.igdb.com/v4/", // IGDB API endpoint
+  headers: {
+    "Client-ID": process.env.CLIENT_ID,
+    Authorization: `Bearer ${process.env.AUTHORIZATION_TOKEN}`,
+  },
+});
+
+const fetchData = async () => {
+  try {
+    const response = await igdbAPI.post("games", {
+      params: {
+        fields: "name, rating;",
+        sort: "rating desc",
+        limit: 10,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
 const Histogram = ({ data }) => {
   const ref = useRef();
-  const [selectedYear, setSelectedYear] = useState(1980);
+  const [gameData, setGameData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/v4/games", {
+          headers: {
+            "Client-ID": process.env.CLIENT_ID,
+            Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+          },
+          params: {
+            fields: "name,rating",
+            limit: 10,
+          },
+        });
+        setGameData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     // Filter data for the selected year and the four subsequent years
     const yearData = data.filter(
-      (d) => d.year >= selectedYear && d.year < selectedYear + 5
+      (d) => d.year >= gameData && d.year < gameData + 5
     );
 
     // Define the dimensions of the chart
@@ -91,13 +137,11 @@ const Histogram = ({ data }) => {
       .attr("y", (d) => yScale(d.rating) - 5)
       .attr("text-anchor", "middle")
       .text((d) => d.name);
-
-    // ... rest of the code remains the same
-  }, [data, selectedYear]);
+  }, [gameData]);
 
   return (
     <div className="histogram-container">
-      <h1>Best Selling Video Games (1980-2023)</h1>
+      <h1>Best Selling Video Games </h1>
       <div className="scrollbar-container">
         {" "}
         {/* New container for the scrollbar */}
@@ -105,11 +149,11 @@ const Histogram = ({ data }) => {
           type="range"
           min="1980"
           max="2019"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(+e.target.value)}
+          value={gameData}
+          onChange={(e) => setGameData(+e.target.value)}
         />
         <p>
-          Years: {selectedYear} - {selectedYear + 4}
+          Years: {gameData} - {gameData + 4}
         </p>
       </div>
       <svg ref={ref}></svg>
