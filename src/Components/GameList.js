@@ -5,6 +5,7 @@ const igdbAPI = axios.create({
   baseURL: "/api",
   headers: {
     "Client-ID": process.env.CLIENT_ID,
+
     Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
   },
 });
@@ -15,8 +16,8 @@ const GameList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await igdbAPI.get("games", {
-          fields: "name,rating; sort rating desc",
+        const response = await igdbAPI.post("/games", {
+          fields: "fields name,rating; sort rating asc;",
           limit: 10,
         });
         console.log("API Response:", response); // Log the API response
