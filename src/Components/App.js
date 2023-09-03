@@ -1,5 +1,6 @@
 import React from "react";
 import Histogram from "./Histogram";
+import GameList from "./GameList";
 
 const data = [
   {
@@ -36,7 +37,13 @@ const data = [
 ];
 
 const App = () => {
-  return <Histogram data={data} />;
+  return (
+    <div>
+      {" "}
+      <GameList />
+      <Histogram data={data} />
+    </div>
+  );
 };
 
 export default App;

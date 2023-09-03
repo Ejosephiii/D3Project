@@ -3,54 +3,9 @@ import * as d3 from "d3";
 import "./Histogram.css"; // Importing the CSS file
 import axios from "axios";
 
-const igdbAPI = axios.create({
-  baseURL: "https://api.igdb.com/v4/", // IGDB API endpoint
-  headers: {
-    "Client-ID": process.env.CLIENT_ID,
-    Authorization: `Bearer ${process.env.AUTHORIZATION_TOKEN}`,
-  },
-});
-
-const fetchData = async () => {
-  try {
-    const response = await igdbAPI.post("games", {
-      params: {
-        fields: "name, rating;",
-        sort: "rating desc",
-        limit: 10,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
 const Histogram = ({ data }) => {
   const ref = useRef();
   const [gameData, setGameData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/v4/games", {
-          headers: {
-            "Client-ID": process.env.CLIENT_ID,
-            Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-          },
-          params: {
-            fields: "name,rating",
-            limit: 10,
-          },
-        });
-        setGameData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     // Filter data for the selected year and the four subsequent years
