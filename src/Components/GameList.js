@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+require('dotenv').config
+
 
 const igdbAPI = axios.create({
   baseURL: "/api",
   headers: {
-    "Client-ID": process.env.CLIENT_ID,
+    Client_ID: process.env.CLIENT_ID,
 
     Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
   },

@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const dotenv = require("dotenv");
+const path = require('path')
 
 module.exports = {
   entry: "./src/index.js",
@@ -37,4 +38,9 @@ module.exports = {
   devServer: {
     static: "./dist", // This replaces 'contentBase' in newer versions
   },
+  resolve: {
+    fallback: {
+      "crypto": false
+    }
+  }
 };
